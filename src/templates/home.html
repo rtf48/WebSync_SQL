@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='home-style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet">
+
+<body>
+    <div class="main-container">
+        <div class="title-container">
+            <div class="title"> WebSync </div>
+        </div>
+        <div class="description-container">
+            <div class="description"> Enter the title or a summary of your favorite web novel, and we'll find a related fanfiction!</div>
+        </div>
+        <div class="book-img-container">
+            <img class="large-image" src="{{ url_for('static', filename='images/book.png') }}"/>
+        </div>
+        <div class="next-container">
+            <div class="prompt-container">
+                <div class="prompt"> Your Selected Web Novel: </div>
+                <div class="selected-novel-group">
+                    <div id="selected-title"></div>
+                </div>
+            </div>
+            <div>
+                <div> See related fanfictions! </div>
+                <a id='results-next' href="results" class="next">
+                    <button class="next-button">
+                        <img src="{{ url_for('static', filename='images/rightarrow.svg') }}"
+                            class="arrow small-icon black-icon" />
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="search-container">
+            <div id="search-title" onClick="sendFocus('title-search')">
+                <!-- can we delete this text, and expand the search bar? -->
+                <button id="search-toggle" onClick="document.getElementById('button-box').innerHTML = '';toggleInput()"> Click to Search by Summary </button>
+                <img src="{{ url_for('static', filename='images/mag.png') }}" class="small-image" />
+                <input class="search-bar" id="title-search" placeholder="Enter a web novel title ... " onkeyup="typewatch(function(){filterText('title-search','/titleSearch?')}, 500 );"></input>
+            </div>
+            <div id="search-descr" onClick="sendFocus('descr-search')">
+                <button id="search-toggle" onClick="document.getElementById('button-box').innerHTML = '';toggleInput()"> Click to Search by Title </button>
+                <img src="{{ url_for('static', filename='images/mag.png') }}" class="small-image" />
+                <textarea class="search-box" id="descr-search" placeholder="Enter a web novel summary ... "></textarea>
+                <button id="submit-descr" onClick="filterText('descr-search','/descrSearch?')"> Submit </button>
+            </div>
+            <div id="button-box"></div>
+        </div>
+    </div>
+    <footer></footer>
+
+    <script>
+        var typewatch = function(){
+            var timer = 0;
+            return function(callback, ms){
+                clearTimeout (timer);
+                timer = setTimeout(callback, ms);
+            }  
+        }();
+
+        function toggleInput() {
+            var textInput = document.getElementById('search-title');
+            var textArea = document.getElementById('search-descr');
+            var toggleButton = document.getElementById('search-toggle');
+            if (textInput.style.display === 'none') {
+                textInput.style.display = 'flex';
+                textArea.style.display = 'none';
+                textInput.value = textArea.value; // Update input value if necessary
+                toggleButton.textContent = "Click to Search by Summary"
+            } else {
+                textInput.style.display = 'none';
+                textArea.style.display = 'flex';
+                textArea.value = textInput.value; // Update textarea value if necessary
+                toggleButton.textContent = "Click to Search by Title"
+            }
+        }
+        function titleButtonTemplate(title) {
+            let titleButton = document.createElement('button');
+            titleButton.textContent = title;
+            titleButton.setAttribute("class", "title-button")
+            titleButton.addEventListener("click", titleButtonEventListener)
+            return titleButton;
+        }
+
+        function titleButtonEventListener(e) {
+            let nextContainer = document.querySelector(".next-container");
+            nextContainer.style.display = 'flex';
+            // Hide the book image; delete below
+            let bookimg = document.querySelector(".book-img-container");
+            bookimg.style.display = 'none';
+            document.getElementById("results-next").href =  "results?" + new URLSearchParams({ title: e.target.textContent }).toString()
+
+            titleContainer = document.getElementById("selected-title")
+            titleContainer.textContent = e.target.textContent
+            let input = document.getElementById('title-search')
+            input.value = ""
+            filterText('title-search')
+        }
+
+        function filterText(id, route) {
+            var count = 0;
+            document.getElementById("button-box").innerHTML = ""
+            fetch(route + new URLSearchParams({ inputText: document.getElementById(id).value }).toString())
+                .then((response) => response.json())
+                .then((data) => new Set(data).forEach(row => {
+                    if (count < 5) {
+                        document.getElementById("button-box").appendChild(titleButtonTemplate(row.title))
+                        count++;
+                    } else {
+                        return;
+                    }
+                }));
+        }
+
+        function sendFocus(id) {
+            document.getElementById(id).focus()
+        }
+
+    </script>
+</body>
+
+</html>

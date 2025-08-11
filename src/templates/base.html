@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet">
+
+<!-- Set up the second page by displyaing the selected webnovel, info, and query boxes. -->
+
+<body onload="setup()">
+    <div class="full-body-container">
+        <div class="header-container">
+            <h1 class="title"> WebSync </h1>
+            <h4 class="subtitle"> Find fan fictions that match your favorite web novels!</h4>
+        </div>
+        <div class="filters-container">
+                                <!-- Tag interface:  -->
+            <div class="inputs">
+                <div class="input-tags">
+                    <label>
+                        Filter by Tags:
+                    </label>
+                    <div class="horizontal-input">
+                        <img src="{{ url_for('static', filename='images/mag.png') }}" class="small-image"/>
+                        <input class="search-bar" id="tags-search", placeholder="Enter a valid tag...">
+                        <button id="add-tag-button"> + </button>
+                        </input>
+                    </div>
+                </div>
+                    <!-- Popularity bar interface -->
+                <div class="input-popularity">
+                    <label>
+                        Rank your results by:
+                    </label>
+                    <div id="slideContainer">
+                        <div id="slider-value">
+                            <sup> Relevance </sup>
+                            <sup> Popularity </sup>
+                        </div>
+                        <input type="range" min="0" max="100" value="0" id="size-slider" onchange="showResults()">
+                    </div>
+                </div>
+            </div>
+            <div class="tags-container"></div>
+        </div>
+
+        <div class="results-container">
+            <div class="results-title-container">
+                <div class="results-title">
+                    Fanfiction Results
+                </div>
+            </div>
+            <div id="answer-box">
+            </div>
+        </div>
+        <!-- <div class="novel-container"> -->
+        <div class="novel-info-container">
+            <!-- <h2> Web Novel</h2> -->
+            <label style="font-size: 135%;"><b>Web Novel: </b></label>
+            <div id="selected-title">{{webnovel_title}}</div>
+            <div class="horizontal">
+                <label style="font-size: 135%"><b>Author: </b></label>
+                <div id="selected-author"></div>
+            </div>
+            <div class="novel-info-group">
+                <label style="font-size: 135%;"><b>
+                    Genres: 
+                </b></label>
+                <div id="genres-container">
+                </div>
+            </div>
+            <div class="novel-info-group">
+                <label style="font-size: 135%;"><b>Summary: </b></label>
+                <div id="selected-descr"></div>
+            </div>
+        </div>
+        <a href="/">
+            <button class="back-button">
+                <img src="{{ url_for('static', filename='images/leftarrow.svg') }}"
+                    class="arrow small-icon black-icon" />
+            </button>
+        </a>
+        <!-- </div> -->
+        <div class="footer"></div>
+
+
+        <script>
+            // Adds and removes tags
+            function addTag(e) {
+                let inputTag = document.getElementById('tags-search').value;
+                if (inputTag === "") {
+                    return;
+                }
+                let tagContainer = document.querySelector('.tags-container');
+                let newTag = document.createElement('div');
+                newTag.setAttribute("class", "tag");
+                let tagName = document.createElement('div');
+                tagName.setAttribute("class", "tag-name");
+                tagName.textContent = inputTag;
+                newTag.appendChild(tagName);
+                let deleteButton = document.createElement('button');
+                deleteButton.setAttribute("class", "delete-button");
+                deleteButton.textContent = "x";
+                deleteButton.addEventListener('click', () => {
+                    tagContainer.removeChild(newTag);
+                    showResults();
+                });
+                newTag.appendChild(deleteButton);
+                tagContainer.appendChild(newTag);
+                showResults();
+                document.getElementById('tags-search').value = "";
+                
+            }
+
+            function setup() {
+                let w_title = document.getElementById("selected-title").textContent
+                fetch("/getNovel?" + new URLSearchParams({ title: w_title }).toString())
+                    .then((response) => response.json())
+                    .then((data) => {
+                        let authorContainer = document.getElementById("selected-author")
+                        authorContainer.textContent = data['author']
+                        let descrContainer = document.getElementById("selected-descr")
+                        descrContainer.textContent = data['descr']
+                        let genres = data['genres']     // genres of the existing webnovel
+                        let genreContainer = document.getElementById("genres-container")
+                        if (genres.length > 4) {
+                            for (var i = 0; i < 4; i++) {
+                                const genreTag = document.createElement('div');
+                                genreTag.setAttribute('class', 'genre-tag');
+                                genreTag.textContent = genres[i];
+                                genreContainer.appendChild(genreTag);
+                            }
+                        } else {        // just display all existing tags
+                            genres.forEach((genre) => {
+                                const genreTag = document.createElement('div');
+                                genreTag.setAttribute('class', 'genre-tag');
+                                genreTag.textContent = genre;
+                                genreContainer.appendChild(genreTag);
+                            })
+                        }
+                    });
+                // allows users to input tags
+                let addTagButton = document.getElementById('add-tag-button');
+                addTagButton.addEventListener('click', addTag);
+                showResults();
+            }
+
+
+            function answerBoxTemplate(fanfic) {
+                let influential_words_html = "<div class='keyword-starter'> Keywords </div>";
+                for (let i = 0; i < fanfic.influential_words.length; i++) {
+                    influential_words_html += "<div class='keyword-token'>" + fanfic.influential_words[i] + "</div>"
+                }
+
+                return `<div class='fanfic-box'>
+                    <div class='fanfic-box-left'>
+                        <h3 class='fanfic-title'><a href="https://archiveofourown.org/works/${fanfic.fanfic_id}" target="_blank">${fanfic.title}</a></h3>
+                        <p class='fanfic-author'>${fanfic.author}</p>
+                        <p class='fanfic-desc'>${fanfic.description}</p>
+                        <div class='horizontal'> 
+                            <img class='small-image' src="{{ url_for('static', filename='images/eye.svg') }}"/>
+                            <p class='fanfic-hits'> ${fanfic.hits}</p>
+                            <img class='small-image' src="{{ url_for('static', filename='images/thumbs-up.svg') }}"/>
+                            <p class='fanfic-kudos'> ${fanfic.kudos}</p>
+                        </div>
+                        <div class='keywords-box'>`
+                                + influential_words_html +
+                        `</div>
+                    </div>
+                    <div class='answer-button-display'>
+                        <p class='fanfic-score'> Score: ${fanfic.score}</p>
+                        <button onclick='query_id("${fanfic.fanfic_id}")' class='answer-info-button'>Info</button>
+                    </div>
+                </div>`
+            }
+
+            function info_box(fanfic) {
+                return `<div> 
+                        </div>`
+            }
+
+            function showFanFicTags(fanfic) {
+                const container = document.createElement('div');
+                container.setAttribute('class', 'fanfic-tags-container');
+                const header = document.createElement('h3');
+                header.textContent = "Tags: ";
+                header.setAttribute('class', 'fanfic-tag-header');
+                container.appendChild(header);
+                for (let i = 0; i < fanfic.tags.length; i++){
+                    const tag = document.createElement('div');
+                    tag.setAttribute('class','fanfic-tag');
+                    tag.textContent = fanfic.tags[i];
+                    container.appendChild(tag);
+                }
+                return container;
+            }
+
+            function sendFocus(id) {
+                document.getElementById(id).focus()
+            }
+
+            
+            function showResults() {
+                document.getElementById("answer-box").innerHTML = "";
+                var w_title = document.getElementById('selected-title');
+                const slider = document.getElementById("size-slider");
+                
+                let user_tags = [];
+                document.querySelector('.tags-container').querySelectorAll('.tag-name').forEach(tag => {
+                    user_tags.push(tag.textContent);
+                });
+
+                fetch("/fanfic-recs/?" + new URLSearchParams({ title: w_title.textContent, popularity_slider: slider.value, tags: user_tags}).toString())
+                    .then((response) => response.json())
+                    .then((data) => (data.length > 0) ? data.forEach(row => {
+                        let result = document.createElement("div");
+                        result.setAttribute('id', row.fanfic_id.toString());
+                        result.innerHTML = answerBoxTemplate(row);
+                        document.getElementById("answer-box").appendChild(result);
+                    }) : document.getElementById("answer-box").innerHTML = "This webnovel has no recommendations with this tagset...");
+            }
+
+            function query_id(fanfic_id) {
+                let xtra_info = document.getElementById(`${fanfic_id}-extra-info`)
+                if (xtra_info) { // Toggle
+                    xtra_info.remove();
+                }
+                else { // Query info
+                    fetch("/inforeq?" + new URLSearchParams({ fanfic_id: fanfic_id }).toString())
+                        .then((response) => response.json())
+                        .then(data => data.forEach(row => {
+                            let info_div = document.createElement('div')
+                            info_div.setAttribute('id', `${fanfic_id}-extra-info`);
+                            info_div.setAttribute('class', 'fanfic-extra-info-box');
+                            info_div.innerHTML = info_box(row);
+                            info_div.appendChild(showFanFicTags(row));
+                            document.getElementById(row.fanfic_id.toString()).appendChild(info_div);
+                            
+                        }));
+                }
+            }
+
+        </script>
+</body>
+
+</html>

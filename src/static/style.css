@@ -1,0 +1,569 @@
+@font-face {
+    font-family: shoreline-font;
+    src: url(Shoreline.otf);
+}
+
+.full-body-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    background-image: url(https://cdn2.vectorstock.com/i/1000x1000/09/71/coffee-stained-paper-vector-750971.jpg);
+    background-size: cover;
+    background-color: none;
+    /*background-color: #d8e0f4;*/
+    z-index: -1;
+}
+
+.header-container {
+    align-self: flex-start;
+    display: flex;
+    position: fixed;
+    width: 40%;
+    height: 21%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 20px rgba(150, 107, 100, 0.75);
+    background-color: #21160eb0;
+}
+
+.title {
+    font-family: optima;
+    font-variant: small-caps;
+    font-weight: normal;
+    font-size: 400%;
+    text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.75);
+    margin:0px;
+    color: white;
+}
+
+.subtitle {
+    font-family: optima;
+    font-size: 125%;
+    font-weight: normal;
+    color: black;
+    text-align: center;
+    margin: 0px;
+    color: white;
+    /* background-color: green; */
+}
+
+.input-tags, .input-popularity {
+    padding: 5px;
+    background-color: rgba(124, 74, 31, 0.7);
+    font-family: 'Kanit', sans-serif;
+    font-size: 13px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: black;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+    color: white;
+}
+
+.input-tags {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+
+.horizontal-input {
+    align-items: baseline;
+    background-color: none;
+    box-shadow: inset;
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar {
+    width: 60%;
+    left: 83%;
+    padding-right: 10px;
+    background: none;
+    border-width: 0px 0px 3px 0px;
+    border-color: white;
+    z-index: 6;
+    color: white;
+}
+
+.search-bar::placeholder {
+    color: white;
+}
+.search-bar:focus {
+    outline: none;
+    background: none;
+    border-color: white;
+    border-width: 0px 0px 3px 0px;
+    z-index: 6;
+}
+
+.filters-container {
+    position: fixed;
+    top: 0%;
+    left: 40%;
+    width: 60%;
+    height: 21%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding: 10px;
+}
+
+.inputs {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.tags-container {
+    margin-left: 15px;
+    justify-self: flex-start;
+    align-self: flex-start;
+    background-color: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-column-gap: 5px;
+    box-sizing: border-box;
+    /* grid-row: inherit; */
+    width: 90%;
+    justify-content: start;
+    align-items: center;
+    /* gap: 5px 10px; */
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.input-popularity {
+    display: flex;
+    font-family: 'Kanit', sans-serif;
+    flex-direction: column;
+    justify-content: start;
+    margin-right: 20px;
+}
+
+label {
+    /* align-items: center; */
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    z-index: 6;
+}
+
+
+.small-image {
+    height: 20px;
+    width: 20px;
+}
+
+.tag {
+    background-color: rgba(240,240,240,0.9);
+    color: black;
+    border-color: black;
+    border-width: 1px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px;
+    align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-family: 'Kanit', sans-serif;
+    gap: 10px;
+}
+
+
+#add-tag-button, .answer-info-button, .delete-button, 
+.answer-remove-button {
+    border-style: none;
+    background-color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #555555;
+    transition: 0.5s;
+    border-radius: 5%;
+}
+
+#add-tag-button:hover, .answer-info-button:hover,.answer-remove-button:hover
+{
+    background-color: #555555;
+    color: whitesmoke;
+    transition: 0.5s;
+}
+
+.delete-button:hover{
+    background-color: rgba(255, 0, 0, 0.7);
+    color: whitesmoke;
+    transition: 0.5s;
+    font-weight: bolder;
+}
+
+.single-container {
+    display: flex;
+}
+
+/* ======================== Results Container: ============================== */
+
+.results-container {
+    position: absolute;
+    display: flex;
+    left: 40%;
+    top: 21%;
+    width: 60%;
+    height: 77.5%;
+    background-color: antiquewhite;
+    z-index: 1;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    position: fixed;
+    border-style: solid;
+    border-width: 7px 0px 0px 3px;
+    border-color: #717171;
+    overflow-y: auto;
+    box-shadow: inset 0 0 15px rgba(89, 46, 4, 0.75);
+    background-image: url(https://media.istockphoto.com/id/1283615709/photo/old-brown-paper-parchment-background-design-with-distressed-vintage-stains-and-ink-spatter.jpg?b=1&s=612x612&w=0&k=20&c=dF3PPajNXtXXzoU4Qghwt9Yazu1KFNHuzmPWJ75eGCs=);
+    background-size: cover;
+    /* padding-left: -5%;
+    padding-right: -15%;
+    box-sizing: border-box;*/
+
+}
+
+.results-title {
+    text-align: center;
+    font-family: optima;
+    font-size: 200%;
+}
+
+.results-title-container {
+    width: 100%;
+    border-style: solid;
+    border-width: 3px 3px 3px 3px;
+    border-right-color: #555555;
+    border-left-color: #555555;
+    border-bottom-color: #555555;
+    border-bottom-left-radius: 3pt;
+    border-bottom-right-radius: 3pt;
+
+}
+
+#answer-box {
+    display: flex;
+    margin-top: 20px;
+    margin-left: 5%;
+    margin-bottom: 20px;
+    overflow: auto;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.keywords-box {
+    display: flex;
+    margin-top: 5px;
+    margin-bottom: 1px;
+    overflow-x: auto; 
+    overflow-y: clip;
+    flex-direction: row;
+    justify-content: start;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+}
+
+.keyword-starter {
+    text-align: center;
+    font-size: small;
+    font-family: 'Kanit', sans-serif;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.keyword-token {
+    display: flex;
+    text-align: center;
+    flex-direction: row;
+    background-color: rgba(176, 105, 6, 0.135);
+    border: 1px solid black;
+    margin: 0px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 15px;
+    font-family: 'Kanit', sans-serif;
+    color: rgb(41, 69, 69);
+    font-size: small;
+}
+
+.fanfic-box {
+    text-align: start;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+    border: 1px solid black;
+    padding: 15px;
+    overflow-y: auto;
+    overflow-x: clip;
+    transition: 0.4s;
+    width: 90%;
+}
+
+.fanfic-box:hover {
+    transition: 0.4s;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.fanfic-box-left {
+    margin:0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 70%;
+}
+
+.fanfic-title {
+    font-family: 'Kanit', sans-serif;
+    color: black;
+    font-size: medium;
+    margin:0px;
+}
+
+.fanfic-author {
+    font-family: 'Kanit', sans-serif;
+    color: darkslategray;
+    font-weight: bold;
+    font-size: small;
+    margin:0px;
+}
+
+.fanfic-desc {
+    font-family: 'Montserrat', sans-serif;
+    color: darkslategray;
+    font-size: small;
+    margin-left:0px;
+    margin-right:0px;
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+
+p {
+    margin: 0px;
+}
+
+.answer-button-display {
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.answer-info-button, .answer-remove-button {
+    padding: 10px;
+}
+
+.fanfic-extra-info-box {
+    border: 1px solid black;
+    border-top-width: 0px;
+    padding: 15px;
+    border-radius: 5px;
+    width: 90%;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.fanfic-tags-container {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+    overflow-x: scroll;
+    width: 100%;
+}
+
+/* ======================================================================== */
+
+.back-button {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    background:none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 30px;
+}
+
+@keyframes wiggle {
+    0%, 7% {
+      transform: rotateZ(0);
+    }
+    15% {
+      transform: rotateZ(-15deg);
+    }
+    20% {
+      transform: rotateZ(10deg);
+    }
+    25% {
+      transform: rotateZ(-10deg);
+    }
+    30% {
+      transform: rotateZ(6deg);
+    }
+    35% {
+      transform: rotateZ(-4deg);
+    }
+    40%, 100% {
+      transform: rotateZ(0);
+    }
+}
+
+.arrow {
+    border-radius: 5px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: black;
+    width: 40px;
+    height: 40px;
+    transition: 0.5s;
+    background-color: #906232c2;
+}
+
+.arrow:hover {
+    transition: 0.5s;
+    background-color: rgba(255,255,255,0.5);
+    animation: wiggle 2s linear infinite;
+}
+
+button:hover {
+    transition: 0.5s;
+    animation: wiggle 2s linear infinite;
+}
+/* =============== WebNovel Info container: =========================== */
+
+.novel-info-container {
+    position: fixed;
+    display: flex;
+    box-sizing: border-box;
+    left: 0%;
+    top: 21%;
+    left: 0%;
+    width: 40%;
+    height: 77%;
+    z-index: 3;
+    padding: 0px 20px;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    text-align: center;
+    border-style: solid;
+    overflow-y: auto;
+    overflow-x: clip;
+    /* padding-left: 2.5%;
+    padding-right: 2.5%; */
+
+    border-width: 7px 0 0 0;
+    border-color: #717171;
+    /* background-image: url(https://media.istockphoto.com/id/1283615709/photo/old-brown-paper-parchment-background-design-with-distressed-vintage-stains-and-ink-spatter.jpg?b=1&s=612x612&w=0&k=20&c=dF3PPajNXtXXzoU4Qghwt9Yazu1KFNHuzmPWJ75eGCs=);
+    background-size: cover; */
+    background-color: #21160eb0;
+
+    color: white;
+    font-family: 'Kanit', sans-serif;
+    gap: 10px;
+}
+
+.novel-info-group {
+    box-sizing: border-box;
+    width: 100%;
+    overflow: auto;
+}
+
+.horizontal {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    overflow: auto;
+    margin: 0px;
+}
+
+#selected-title {
+    font-size: 125%;
+    /* font-weight: bold; */
+    font-family: kanit;
+    /* font-weight: bold; */
+    color:rgb(255, 255, 255)
+}
+
+#selected-author {
+    font-size: 125%;
+    font-family: kanit;
+}
+
+#selected-descr {
+    /* background-color:red; */
+    text-align: start;
+    font-size: 115%;
+    font-family: arial;
+}
+
+
+#genres-container {
+    display: grid;
+    font-size: 125%;
+    gap: 5px;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    justify-content: center;
+    align-items: center;
+}
+
+.genre-tag {
+    background-color: #FAEED1;
+    border-radius: 10px;
+    color: #6b635c;
+}
+
+#slider-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#size-slider {
+    width: 100%;
+}
+/* ========================================================================== */
+
+.footer {
+    top: 97%;
+    width: 100%;
+    background-color: black;
+    height: 3%;
+    position: fixed;
+    z-index: 3;
+
+}
