@@ -1,11 +1,13 @@
-import json
 import os
 from flask import Flask, render_template, request, session
 from flask_cors import CORS
-from backend.helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
+import backend.sql_setup as sql_setup
+from backend.models import db
+
 import backend.search as search
 import numpy as np
 import copy
+from flask_sqlalchemy import SQLAlchemy
 
 
 # ROOT_PATH for linking with all your files. 
@@ -18,6 +20,11 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 
 
 app = Flask(__name__)
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:admin@websync_db/websync'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
 
 app.secret_key = 'BAD_SECRET_KEY_1234'
 CORS(app)

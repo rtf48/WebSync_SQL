@@ -1,0 +1,37 @@
+services:
+    backend_flask_app:
+        container_name: websync_backend_app
+        restart: always
+        build:
+                context: .
+                dockerfile: Dockerfile
+        ports: 
+                - 0.0.0.0:5000:5000
+        depends_on:
+                - db
+        environment:
+                - DB_NAME=websync_db
+        networks:
+                flask_network:
+                        aliases:
+                                - flask-network
+        command: flask run --host=0.0.0.0 --port=5000
+    db:
+        container_name: websync_db
+        image: mysql:latest
+        restart: always
+        environment:
+                - MYSQL_USER=admin
+                - MYSQL_PASSWORD=admin
+                - MYSQL_DATABASE=websync
+                - MYSQL_ROOT_PASSWORD=admin
+        volumes:
+                - flask_volume:/home/lobster/Docker/mysql
+                - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        networks:
+                - flask_network
+
+volumes:
+        flask_volume:
+networks:
+        flask_network:
