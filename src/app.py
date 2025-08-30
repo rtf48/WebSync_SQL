@@ -65,16 +65,16 @@ def results():
 @app.route("/titleSearch")
 def titleSearch():
     """
-    Gets the user typed query, and calls json_search to return relevant webnovels.
+    Gets the user typed query, and calls sql to return relevant webnovels.
     Links to function filterText(id) in home.html.
     """
     text = request.args.get("inputText")
-    return search.json_search(text)
+    return search.sql_search(text)
 
 @app.route("/descrSearch")
 def descrSearch():
     """
-    Gets the user typed query, and calls json_search to return relevant webnovels.
+    Gets the user typed query, and calls sql to return relevant webnovels.
     Links to function filterText(id) in home.html.
     """
     text = request.args.get("inputText")
