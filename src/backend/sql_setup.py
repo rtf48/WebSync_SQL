@@ -32,7 +32,7 @@ def getTitleInfo(data):
 
 HOST = "websync_db"
 USER = "admin"        
-PASSWORD = "admin"  
+PASSWORD = "dark_horse"  
 DB_NAME = "websync"
 
 def setup():

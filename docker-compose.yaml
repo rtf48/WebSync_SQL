@@ -24,7 +24,7 @@ services:
                 - MYSQL_USER=admin
                 - MYSQL_PASSWORD=admin
                 - MYSQL_DATABASE=websync
-                - MYSQL_ROOT_PASSWORD=admin
+                - MYSQL_ROOT_PASSWORD=dark_horse
         volumes:
                 - flask_volume:/home/lobster/Docker/mysql
                 - ./init.sql:/docker-entrypoint-initdb.d/init.sql
