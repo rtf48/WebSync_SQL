@@ -56,12 +56,13 @@ def setup():
     # Create database if it doesn’t exist
     cursor.execute("SHOW DATABASES LIKE %s", (DB_NAME,))
     if cursor.fetchone():
-        print(f"Database '{DB_NAME}' already exists. Exiting importer.", flush=True)
-        cursor.close()
-        conn.close()
-        return
+        cursor.execute(f"DROP DATABASE {DB_NAME}")
+        cursor.execute(f"CREATE DATABASE {DB_NAME}")
+        #print(f"Database '{DB_NAME}' already exists. Exiting importer.", flush=True)
+        #cursor.close()
+        #conn.close()
+        #return
     
-    cursor.execute(f"CREATE DATABASE {DB_NAME}")
     cursor.execute(f"USE {DB_NAME}")
 
     # Create novels table

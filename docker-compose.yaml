@@ -15,7 +15,7 @@ services:
                 flask_network:
                         aliases:
                                 - flask-network
-        command: flask run --host=0.0.0.0 --port=5000
+        command: flask --app src/app.py run --host=0.0.0.0 --port=5000
     db:
         container_name: websync_db
         image: mysql:latest
