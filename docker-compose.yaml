@@ -6,7 +6,7 @@ services:
                 context: .
                 dockerfile: Dockerfile
         ports: 
-                - 0.0.0.0:5000:5000
+                - "80:5000"
         depends_on:
                 - db
         environment:
@@ -24,12 +24,13 @@ services:
                 - MYSQL_USER=admin
                 - MYSQL_PASSWORD=admin
                 - MYSQL_DATABASE=websync
-                - MYSQL_ROOT_PASSWORD=dark_horse
+                - MYSQL_ROOT_PASSWORD=admin
         volumes:
                 - flask_volume:/home/lobster/Docker/mysql
                 - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
                 - flask_network
+
 
 volumes:
         flask_volume:
